@@ -5,6 +5,8 @@ import ScrollToTop from './ScrollToTop';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { BlogProvider } from './context/Context';
 import Blogs from './pages/Blog/Blogs';
+import PerformanceTestMeasure from './pages/Blog/PerformanceTestMeasure';
+import PerformanceTestInvestigate from './pages/Blog/PerformanceTestInvestigate';
 import ErrorTest from './pages/ErrorTest';
 import SlowLoading from './pages/SlowLoading';
 import Diagnostics from './pages/Diagnostics';
@@ -53,6 +55,24 @@ const App = () => {
         <>
           <ScrollToTop />
           <Diagnostics />
+        </>
+      ),
+    },
+    {
+      path: '/performance-test/measure',
+      element: (
+        <>
+          <ScrollToTop />
+          <PerformanceTestMeasure />
+        </>
+      ),
+    },
+    {
+      path: '/performance-test/investigate',
+      element: (
+        <>
+          <ScrollToTop />
+          <PerformanceTestInvestigate />
         </>
       ),
     },

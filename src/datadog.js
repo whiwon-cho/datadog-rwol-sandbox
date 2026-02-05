@@ -84,7 +84,7 @@ export const initializeDatadog = () => {
     startSessionReplayRecordingManually: false,
     trackResources: true,
     trackLongTasks: true,
-    defaultPrivacyLevel: 'mask-user-input',
+    // defaultPrivacyLevel: 'mask-user-input',
     // allowedTracingUrls: allowedTracingUrls,
     allowedTracingUrls: ["https://dummyjson.com"],
   });

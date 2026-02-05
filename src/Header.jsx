@@ -73,6 +73,11 @@ const Header = () => {
     { name: 'Diagnostics', path: '/diagnostics', icon: 'ri-dashboard-line' },
   ];
 
+  const performanceLinks = [
+    { name: 'Measure', path: '/performance-test/measure', icon: 'ri-line-chart-line' },
+    { name: 'Investigate', path: '/performance-test/investigate', icon: 'ri-search-line' },
+  ];
+
   let service = useRef();
   let items = useRef();
   let outerDiv = useRef();
@@ -83,19 +88,32 @@ const Header = () => {
   let serviceClick = () => {
     let dupToggle = !toggle;
     setToggle(dupToggle);
-    
-    // Close process menu when service opens
-    if (dupToggle && toggle2) {
-      setToggle2(false);
-      process.current.style.borderBottom = "2px solid transparent";
-      proItems.current.style.height = "0px";
-      proItems.current.style.paddingBottom = "0px";
-    }
 
-    if (dupToggle && functionsMenuToggle) {
-      setFunctionsMenuToggle(false);
-      if (functionsMenuList.current) {
-        functionsMenuList.current.style.height = "0px";
+    // Close other menus when service opens
+    if (dupToggle) {
+      if (toggle2) {
+        setToggle2(false);
+        process.current.style.borderBottom = "2px solid transparent";
+        proItems.current.style.height = "0px";
+        proItems.current.style.paddingBottom = "0px";
+      }
+      if (functionsMenuToggle) {
+        setFunctionsMenuToggle(false);
+        if (functionsMenuList.current) {
+          functionsMenuList.current.style.height = "0px";
+        }
+      }
+      if (MobBlogToggle) {
+        setMobkBlogToggle(false);
+        if (mobBlogList.current) {
+          mobBlogList.current.style.height = "0px";
+        }
+      }
+      if (MobPerformanceToggle) {
+        setMobPerformanceToggle(false);
+        if (mobPerformanceList.current) {
+          mobPerformanceList.current.style.height = "0px";
+        }
       }
     }
 
@@ -117,19 +135,32 @@ const Header = () => {
   let processClick = () => {
     let dupli2Toggle = !toggle2;
     setToggle2(dupli2Toggle);
-    
-    // Close service menu when process opens
-    if (dupli2Toggle && toggle) {
-      setToggle(false);
-      service.current.style.borderBottom = "2px solid transparent";
-      items.current.style.height = "0px";
-      outerDiv.current.style.height = "0px";
-    }
 
-    if (dupli2Toggle && functionsMenuToggle) {
-      setFunctionsMenuToggle(false);
-      if (functionsMenuList.current) {
-        functionsMenuList.current.style.height = "0px";
+    // Close other menus when process opens
+    if (dupli2Toggle) {
+      if (toggle) {
+        setToggle(false);
+        service.current.style.borderBottom = "2px solid transparent";
+        items.current.style.height = "0px";
+        outerDiv.current.style.height = "0px";
+      }
+      if (functionsMenuToggle) {
+        setFunctionsMenuToggle(false);
+        if (functionsMenuList.current) {
+          functionsMenuList.current.style.height = "0px";
+        }
+      }
+      if (MobBlogToggle) {
+        setMobkBlogToggle(false);
+        if (mobBlogList.current) {
+          mobBlogList.current.style.height = "0px";
+        }
+      }
+      if (MobPerformanceToggle) {
+        setMobPerformanceToggle(false);
+        if (mobPerformanceList.current) {
+          mobPerformanceList.current.style.height = "0px";
+        }
       }
     }
 
@@ -164,25 +195,31 @@ const Header = () => {
   const [isServiceOpen, setIsServiceOpen] = useState(false);
   const [isProcessOpen, setIsProcessOpen] = useState(false);
   const [isFunctionsOpen, setIsFunctionsOpen] = useState(false);
-  
-  // Close process when service opens and vice versa
+  const [isBlogOpen, setIsBlogOpen] = useState(false);
+  const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
+
+  // Close all other menus when one opens
   const handleServiceToggle = () => {
     setIsServiceOpen(prev => {
       const next = !prev;
       if (next) {
         setIsProcessOpen(false);
         setIsFunctionsOpen(false);
+        setIsBlogOpen(false);
+        setIsPerformanceOpen(false);
       }
       return next;
     });
   };
-  
+
   const handleProcessToggle = () => {
     setIsProcessOpen(prev => {
       const next = !prev;
       if (next) {
         setIsServiceOpen(false);
         setIsFunctionsOpen(false);
+        setIsBlogOpen(false);
+        setIsPerformanceOpen(false);
       }
       return next;
     });
@@ -194,52 +231,81 @@ const Header = () => {
       if (next) {
         setIsServiceOpen(false);
         setIsProcessOpen(false);
+        setIsBlogOpen(false);
+        setIsPerformanceOpen(false);
       }
       return next;
     });
   };
 
-  const blogList = useRef();
-  const [blogToggle, setblogToggle] = useState(false);
-  
-  let blogClick = ()=>{
-    let blog = !blogToggle;
-    setblogToggle(blog)
-    if (blog) {
-      blogList.current.style.height = "fit-content";
-    } else {
-      blogList.current.style.height = "0px";
-    }
-  }
+  const handleBlogToggle = () => {
+    setIsBlogOpen(prev => {
+      const next = !prev;
+      if (next) {
+        setIsServiceOpen(false);
+        setIsProcessOpen(false);
+        setIsFunctionsOpen(false);
+        setIsPerformanceOpen(false);
+      }
+      return next;
+    });
+  };
 
-  let deskBlog = useRef();
-  let [DeskBlogToggle, setDeskBlogToggle] = useState(false);
-  
-  let deskBlogHandler = ()=>{
-    let deskToggle = !DeskBlogToggle;
-    setDeskBlogToggle(deskToggle);
-    if(deskToggle){
-      deskBlog.current.style.display = "inline";
-      deskBlog.current.style.height = "fit-content";
-      deskBlog.current.style.border = '1px solid #a1a1aa';
-    }
-    else{
-      deskBlog.current.style.display = "none";
-      deskBlog.current.style.height = "0px";
-      deskBlog.current.style.border = 'transparent';
-    }
-  }
+  const handlePerformanceToggle = () => {
+    setIsPerformanceOpen(prev => {
+      const next = !prev;
+      if (next) {
+        setIsServiceOpen(false);
+        setIsProcessOpen(false);
+        setIsFunctionsOpen(false);
+        setIsBlogOpen(false);
+      }
+      return next;
+    });
+  };
+
 
   let mobBlogList = useRef();
   let [MobBlogToggle, setMobkBlogToggle] = useState(false);
-  
-  let mobBlogHandler = ()=>{
+
+  let mobPerformanceList = useRef();
+  let [MobPerformanceToggle, setMobPerformanceToggle] = useState(false);
+
+  let mobBlogHandler = () => {
     let switchToggle = !MobBlogToggle;
     setMobkBlogToggle(switchToggle);
-    if(switchToggle){
-      mobBlogList.current.style.height = "fit-content";
+
+    // Close other menus when blog opens
+    if (switchToggle) {
+      if (toggle) {
+        setToggle(false);
+        service.current.style.borderBottom = "2px solid transparent";
+        items.current.style.height = "0px";
+        outerDiv.current.style.height = "0px";
+      }
+      if (toggle2) {
+        setToggle2(false);
+        process.current.style.borderBottom = "2px solid transparent";
+        proItems.current.style.height = "0px";
+        proItems.current.style.paddingBottom = "0px";
+      }
+      if (functionsMenuToggle) {
+        setFunctionsMenuToggle(false);
+        if (functionsMenuList.current) {
+          functionsMenuList.current.style.height = "0px";
+        }
+      }
+      if (MobPerformanceToggle) {
+        setMobPerformanceToggle(false);
+        if (mobPerformanceList.current) {
+          mobPerformanceList.current.style.height = "0px";
+        }
+      }
     }
-    else{
+
+    if (switchToggle) {
+      mobBlogList.current.style.height = "fit-content";
+    } else {
       mobBlogList.current.style.height = "0px";
     }
   }
@@ -269,6 +335,46 @@ const Header = () => {
           mobBlogList.current.style.height = "0px";
         }
       }
+      if (MobPerformanceToggle) {
+        setMobPerformanceToggle(false);
+        if (mobPerformanceList.current) {
+          mobPerformanceList.current.style.height = "0px";
+        }
+      }
+    }
+  };
+
+  const mobilePerformanceHandler = () => {
+    const toggled = !MobPerformanceToggle;
+    setMobPerformanceToggle(toggled);
+    if (mobPerformanceList.current) {
+      mobPerformanceList.current.style.height = toggled ? "fit-content" : "0px";
+    }
+    if (toggled) {
+      if (toggle) {
+        setToggle(false);
+        service.current.style.borderBottom = "2px solid transparent";
+        items.current.style.height = "0px";
+        outerDiv.current.style.height = "0px";
+      }
+      if (toggle2) {
+        setToggle2(false);
+        process.current.style.borderBottom = "2px solid transparent";
+        proItems.current.style.height = "0px";
+        proItems.current.style.paddingBottom = "0px";
+      }
+      if (MobBlogToggle) {
+        setMobkBlogToggle(false);
+        if (mobBlogList.current) {
+          mobBlogList.current.style.height = "0px";
+        }
+      }
+      if (functionsMenuToggle) {
+        setFunctionsMenuToggle(false);
+        if (functionsMenuList.current) {
+          functionsMenuList.current.style.height = "0px";
+        }
+      }
     }
   };
 
@@ -291,29 +397,81 @@ const Header = () => {
     } catch (error) {
       setCurrentUser(null);
     }
+
+    // Close all menus when navigating to a new page
+    setIsServiceOpen(false);
+    setIsProcessOpen(false);
+    setIsFunctionsOpen(false);
+    setIsBlogOpen(false);
+    setIsPerformanceOpen(false);
   }, [location.pathname]);
+
+  // Close all desktop menus when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if click is outside all menu dropdowns
+      const isInsideMenu = event.target.closest('li');
+      if (!isInsideMenu) {
+        setIsServiceOpen(false);
+        setIsProcessOpen(false);
+        setIsFunctionsOpen(false);
+        setIsBlogOpen(false);
+        setIsPerformanceOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const generateRandomUser = () => {
+    const firstNames = ['Alex', 'Jordan', 'Taylor', 'Morgan', 'Casey', 'Riley', 'Avery', 'Quinn', 'Cameron', 'Dakota'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+
+    const randomId = Math.floor(Math.random() * 10000) + 1000;
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const name = `${firstName} ${lastName}`;
+    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@standard-user.com`;
+
+    return {
+      id: randomId.toString(),
+      name: name,
+      email: email,
+      plan: 'standard',
+      hasPaid: false
+    };
+  };
 
   const handleResetSession = () => {
     try {
-      // Save user data before clearing
-      const stored = sessionStorage.getItem('dd_current_user');
-      
       // Stop current session
       datadogRum.stopSession();
-      
-      // Restore user data
-      if (stored) {
-        sessionStorage.setItem('dd_current_user', stored);
-        const parsed = JSON.parse(stored);
-        setCurrentUser(parsed);
-      } else {
-        setCurrentUser(null);
-      }
-      
+
+      // Generate new random user
+      const newUser = generateRandomUser();
+
+      // Save to sessionStorage
+      sessionStorage.setItem('dd_current_user', JSON.stringify(newUser));
+
+      // Set new user in Datadog RUM
+      datadogRum.setUser({
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        plan: newUser.plan,
+        hasPaid: newUser.hasPaid
+      });
+
+      // Update local state
+      setCurrentUser(newUser);
+
       // Visual feedback
-      alert('Session has been reset successfully!');
-      
-      // Optionally reload the page
+      alert(`Session reset! New user: ${newUser.name} (${newUser.email})`);
+
+      // Reload the page to start fresh
       window.location.reload();
     } catch (error) {
       console.error('Failed to reset session:', error);
@@ -362,12 +520,21 @@ const Header = () => {
     <div className="sticky z-[999] top-0 bg-white w-[100vw] px-4 max-w-[1700px] mx-auto">
       <div className="sticky z-[999] top-0 bg-white">
         <div className="flex w-full px-4 items-center justify-between bg-white">
-          <NavLink to='/'>
+          <NavLink
+            to='/'
+            onClick={() => {
+              setIsServiceOpen(false);
+              setIsProcessOpen(false);
+              setIsFunctionsOpen(false);
+              setIsBlogOpen(false);
+              setIsPerformanceOpen(false);
+            }}
+          >
             <img
-            className="logo w-[40vw] sm:w-[16rem] md:w-[12rem]"
-            src={dd_logo_h_rgb}
-            alt="Logo Image"
-          />
+              className="logo w-[40vw] sm:w-[16rem] md:w-[12rem]"
+              src={dd_logo_h_rgb}
+              alt="Logo Image"
+            />
           </NavLink>
           <i
             className={`menu text-[4.5vw] cursor-pointer sm:text-[1.8rem] lg:hidden transition-all duration-300 ${
@@ -376,13 +543,13 @@ const Header = () => {
             onClick={menuClick}
           ></i>
           
-          <div className="hidden md:hidden lg:flex w-[75%] md:justify-between items-center">
-            <ul className="flex items-center gap-4 lg:gap-5">
+          <div className="hidden md:hidden lg:flex w-[78%] md:justify-between items-center">
+            <ul className="flex items-center gap-2 xl:gap-3">
               <li
                 onClick={handleServiceToggle}
-                className="cursor-pointer text-[1.1rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300"
+                className="cursor-pointer text-[0.95rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300"
               >
-                <i className="ri-tools-fill mr-2"></i>Services
+                <i className="ri-tools-fill mr-1.5"></i>Services
                 <i className={`ri-arrow-down-s-fill ml-1 transition-transform duration-300 ${isServiceOpen ? 'rotate-180' : ''}`}></i>
                 {isServiceOpen && (
                   <div className="bg-white border border-zinc-200 shadow-lg absolute top-[100%] left-[20%] grid grid-cols-3 px-4 py-4 gap-5 lg:gap-10 rounded-md">
@@ -404,12 +571,12 @@ const Header = () => {
                   </div>
                 )}
               </li>
-              
+
               {/* <li
                 onClick={handleProcessToggle}
-                className="relative cursor-pointer text-[1.1rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300"
+                className="relative cursor-pointer text-[0.95rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300"
               >
-                <i className="ri-settings-3-line mr-2"></i>Process
+                <i className="ri-settings-3-line mr-1.5"></i>Process
                 <i className={`ri-arrow-down-s-fill ml-1 transition-transform duration-300 ${isProcessOpen ? 'rotate-180' : ''}`}></i>
                 {isProcessOpen && (
                   <div className="absolute top-[180%] bg-white border border-zinc-200 shadow-lg z-50 rounded-md min-w-[250px]">
@@ -423,48 +590,104 @@ const Header = () => {
                   </div>
                 )}
               </li> */}
-              
-              <li className="cursor-pointer text-[1.1rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300">
-                <i className="ri-information-line mr-2"></i>
-                <NavLink to="/about">About Us</NavLink>
+
+              <li className="cursor-pointer text-[0.95rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300">
+                <NavLink
+                  to="/about"
+                  onClick={() => {
+                    setIsServiceOpen(false);
+                    setIsProcessOpen(false);
+                    setIsFunctionsOpen(false);
+                    setIsBlogOpen(false);
+                    setIsPerformanceOpen(false);
+                  }}
+                >
+                  <i className="ri-information-line mr-1.5"></i>About
+                </NavLink>
               </li>
 
-              <li 
-                onClick={deskBlogHandler} 
-                className="cursor-pointer text-[1.1rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300 relative"
+              <li
+                onClick={handleBlogToggle}
+                className="cursor-pointer text-[0.95rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300 relative"
               >
-                <i className="ri-article-line mr-2"></i>Blogs
-                <i className={`ri-arrow-down-s-fill ml-1 transition-transform duration-300 ${DeskBlogToggle ? 'rotate-180' : ''}`}></i>
-                <div ref={deskBlog} className="overflow-hidden h-[0px] border-1 border-transparent rounded-md px-2 py-2 pr-5 absolute top-[180%] left-0 bg-white shadow-lg min-w-[200px] hidden">
-                  <ul >
-                    {blogs.map((b, index) => {
-                      return (
-                        <li key={index} className="text-sm ml-3 mt-2 mb-1 whitespace-nowrap hover:text-[#FFB600] cursor-pointer transition-colors">
-                          <NavLink to={`/blogs/${b.name.toLowerCase().replace(" ", "-")}`}>
-                            <i className="mr-2 ri-book-marked-fill text-[#FFB600]"></i>{b.name}
+                <i className="ri-article-line mr-1.5"></i>Blogs
+                <i className={`ri-arrow-down-s-fill ml-1 transition-transform duration-300 ${isBlogOpen ? 'rotate-180' : ''}`}></i>
+                {isBlogOpen && (
+                  <div className="absolute top-[180%] left-0 bg-white border border-zinc-200 shadow-lg z-50 rounded-md min-w-[200px]">
+                    <ul className="flex flex-col">
+                      {blogs.map((b, index) => (
+                        <li key={index} className="hover:bg-[#FFF9E6] transition-colors">
+                          <NavLink
+                            to={`/blogs/${b.name.toLowerCase().replace(" ", "-")}`}
+                            className="flex items-center gap-3 px-4 py-3 text-sm whitespace-nowrap"
+                            onClick={() => {
+                              setIsBlogOpen(false);
+                              setIsPerformanceOpen(false);
+                            }}
+                          >
+                            <i className="ri-book-marked-fill text-[#FFB600]"></i>
+                            {b.name}
                           </NavLink>
                         </li>
-                      );
-                    })}
-                  </ul>
-                </div>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </li>
-              
+
               <li
                 onClick={handleFunctionsToggle}
-                className="relative cursor-pointer text-[1.1rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300"
+                className="relative cursor-pointer text-[0.95rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300"
               >
-                <i className="ri-function-line mr-2"></i>Functions
+                <i className="ri-function-line mr-1.5"></i>Functions
                 <i className={`ri-arrow-down-s-fill ml-1 transition-transform duration-300 ${isFunctionsOpen ? 'rotate-180' : ''}`}></i>
                 {isFunctionsOpen && (
                   <div className="absolute top-[180%] bg-white border border-zinc-200 shadow-lg z-50 rounded-md min-w-[220px]">
                     <ul className="flex flex-col">
                       {functionLinks.map((item) => (
-                        <li key={item.path} className="flex items-center gap-3 px-4 py-3 hover:bg-[#FFF9E6] transition-colors">
+                        <li key={item.path} className="hover:bg-[#FFF9E6] transition-colors">
                           <NavLink
                             to={item.path}
-                            className="flex items-center gap-3"
-                            onClick={() => setIsFunctionsOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3"
+                            onClick={() => {
+                              setIsServiceOpen(false);
+                              setIsProcessOpen(false);
+                              setIsFunctionsOpen(false);
+                              setIsBlogOpen(false);
+                              setIsPerformanceOpen(false);
+                            }}
+                          >
+                            <i className={`${item.icon} text-[#FFB600]`}></i>
+                            {item.name}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+
+              <li
+                onClick={handlePerformanceToggle}
+                className="relative cursor-pointer text-[0.95rem] p-2 border-b-2 border-transparent hover:border-[#FFB600] hover:bg-[#FFF9E6] rounded-t-md transition-all duration-300"
+              >
+                <i className="ri-speed-line mr-1.5"></i>Performance
+                <i className={`ri-arrow-down-s-fill ml-1 transition-transform duration-300 ${isPerformanceOpen ? 'rotate-180' : ''}`}></i>
+                {isPerformanceOpen && (
+                  <div className="absolute top-[180%] bg-white border border-zinc-200 shadow-lg z-50 rounded-md min-w-[220px]">
+                    <ul className="flex flex-col">
+                      {performanceLinks.map((item) => (
+                        <li key={item.path} className="hover:bg-[#FFF9E6] transition-colors">
+                          <NavLink
+                            to={item.path}
+                            className="flex items-center gap-3 px-4 py-3"
+                            onClick={() => {
+                              setIsServiceOpen(false);
+                              setIsProcessOpen(false);
+                              setIsFunctionsOpen(false);
+                              setIsBlogOpen(false);
+                              setIsPerformanceOpen(false);
+                            }}
                           >
                             <i className={`${item.icon} text-[#FFB600]`}></i>
                             {item.name}
@@ -476,33 +699,43 @@ const Header = () => {
                 )}
               </li>
             </ul>
-            
-            <div className="flex items-center gap-4">
+
+            <div className="flex items-center gap-2">
               {currentUser ? (
-                <div className="text-sm text-right">
-                  <p className="font-semibold text-gray-800">Welcome, {currentUser.name || 'Guest'}</p>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-right">
+                    <p className="font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]">
+                      {currentUser.name || 'Guest'}
+                    </p>
+                  </div>
                   {currentUser.plan && (
-                    <p className="text-gray-500 text-xs uppercase">Plan: {currentUser.plan}</p>
+                    <span className={`px-2 py-0.5 rounded text-[0.65rem] font-semibold uppercase ${
+                      currentUser.plan === 'premium'
+                        ? 'bg-purple-100 text-purple-700'
+                        : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {currentUser.plan}
+                    </span>
                   )}
                 </div>
               ) : (
-                <div className="text-sm text-right text-gray-500">
-                  <p>Fetching user...</p>
+                <div className="text-xs text-gray-500">
+                  <p>Loading...</p>
                 </div>
               )}
-              <button 
+              <button
                 onClick={handleToggleUserPlan}
-                className="px-3 rounded-lg py-1.5 text-[0.85rem] border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 w-fit cursor-pointer"
+                className="px-2.5 rounded-lg py-1.5 text-[0.75rem] border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 w-fit cursor-pointer whitespace-nowrap"
                 title="Upgrade to Premium Plan"
               >
-                <i className="ri-vip-crown-line mr-1.5"></i>Upgrade Plan
+                <i className="ri-vip-crown-line mr-1"></i>Upgrade
               </button>
-              <button 
+              <button
                 onClick={handleResetSession}
-                className="px-3 rounded-lg py-1.5 text-[0.85rem] border border-zinc-900 hover:bg-zinc-900 hover:text-white transition-all duration-300 w-fit cursor-pointer"
+                className="px-2.5 rounded-lg py-1.5 text-[0.75rem] border border-zinc-900 hover:bg-zinc-900 hover:text-white transition-all duration-300 w-fit cursor-pointer whitespace-nowrap"
                 title="Reset Datadog Session"
               >
-                <i className="ri-restart-line mr-1.5"></i>Reset Session
+                <i className="ri-restart-line mr-1"></i>Reset
               </button>
             </div>
           </div>
@@ -556,7 +789,29 @@ const Header = () => {
             </li>
             
             <li className="text-[1rem] sm:text-[1.2rem] border-b-[2px] border-transparent cursor-pointer hover:border-[#FCB714] p-2 transition-all duration-200">
-              <NavLink to="/about">About Us</NavLink>
+              <NavLink
+                to="/about"
+                onClick={() => {
+                  setToggle(false);
+                  setToggle2(false);
+                  setMobkBlogToggle(false);
+                  setFunctionsMenuToggle(false);
+                  setMenuToggle(false);
+                  if (service.current) service.current.style.borderBottom = "2px solid transparent";
+                  if (items.current) items.current.style.height = "0px";
+                  if (outerDiv.current) outerDiv.current.style.height = "0px";
+                  if (process.current) process.current.style.borderBottom = "2px solid transparent";
+                  if (proItems.current) {
+                    proItems.current.style.height = "0px";
+                    proItems.current.style.paddingBottom = "0px";
+                  }
+                  if (mobBlogList.current) mobBlogList.current.style.height = "0px";
+                  if (functionsMenuList.current) functionsMenuList.current.style.height = "0px";
+                  if (slideMenu.current) slideMenu.current.style.height = "0px";
+                }}
+              >
+                About Us
+              </NavLink>
             </li>
 
             <li 
@@ -570,7 +825,15 @@ const Header = () => {
                   {blogs.map((b, index) => {
                     return (
                       <li key={index} className="text-lg ml-3 mb-2 hover:text-[#FFB600] cursor-pointer transition-colors">
-                        <NavLink to={`/blogs/${b.name}`}>
+                        <NavLink
+                          to={`/blogs/${b.name.toLowerCase().replace(" ", "-")}`}
+                          onClick={() => {
+                            setMobkBlogToggle(false);
+                            setMenuToggle(false);
+                            if (mobBlogList.current) mobBlogList.current.style.height = "0px";
+                            if (slideMenu.current) slideMenu.current.style.height = "0px";
+                          }}
+                        >
                           <i className="mr-2 ri-book-marked-fill text-[#FFB600]"></i>{b.name}
                         </NavLink>
                       </li>
@@ -611,7 +874,39 @@ const Header = () => {
                 </ul>
               </div>
             </li>
-            
+
+            <li
+              onClick={mobilePerformanceHandler}
+              className="text-[1rem] sm:text-[1.2rem] border-b-[2px] border-transparent cursor-pointer hover:border-[#FCB714] p-2 transition-all duration-200"
+            >
+              Performance
+              <i className={`cursor-pointer ri-arrow-down-s-fill ml-2 transition-transform duration-300 ${MobPerformanceToggle ? 'rotate-180' : ''}`}></i>
+              <div ref={mobPerformanceList} className="overflow-hidden pb-[0px] h-0">
+                <ul className="mt-2">
+                  {performanceLinks.map((item) => (
+                    <li key={item.path} className="text-lg ml-3 mb-2 hover:text-[#FFB600] cursor-pointer transition-colors">
+                      <NavLink
+                        to={item.path}
+                        onClick={() => {
+                          setMobPerformanceToggle(false);
+                          if (mobPerformanceList.current) {
+                            mobPerformanceList.current.style.height = "0px";
+                          }
+                          setMenuToggle(false);
+                          if (slideMenu.current) {
+                            slideMenu.current.style.height = "0px";
+                          }
+                        }}
+                      >
+                        <i className={`mr-2 ${item.icon} text-[#FFB600]`}></i>
+                        {item.name}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+
             <div className="flex flex-col gap-3">
               {currentUser ? (
                 <>

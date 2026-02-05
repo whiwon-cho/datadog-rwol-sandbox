@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:automation": "node automation-test.js",
+    "test:measure": "node automation-measure.js",
+    "test:investigate": "node automation-investigate.js"
   },
   "dependencies": {
     "@datadog/browser-logs": "^6.24.0",
@@ -29,6 +33,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "playwright": "^1.58.0",
     "vite": "^6.3.5"
   }
 }
